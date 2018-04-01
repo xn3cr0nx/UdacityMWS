@@ -57,10 +57,14 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
 
   const image = document.getElementById('restaurant-img');
   image.className = 'restaurant-img'
-  image.src = DBHelper.imageUrlForRestaurant(restaurant);
+  const original_image = DBHelper.imageUrlForRestaurant(restaurant);
+  image.src = original_image;
+  image.srcset = `${original_image.replace('-original', '-small')} 400w, ${original_image.replace('-original', '-medium')} 800w, ${original_image.replace('-original', '-large')} 1000w`;
+  image.sizes = '(min-width: 800px) 40vw, 95vw';
 
   const cuisine = document.getElementById('restaurant-cuisine');
   cuisine.innerHTML = restaurant.cuisine_type;
+  // cuisine.setAttribute('style', `width: ${document.getElementById('restaurant-img').width}px`)
 
   // fill operating hours
   if (restaurant.operating_hours) {
@@ -118,16 +122,17 @@ fillReviewsHTML = (reviews = self.restaurant.reviews) => {
 createReviewHTML = (review) => {
   const li = document.createElement('li');
   const div = document.createElement('div');
-  div.setAttribute('id', 'black-band')
+  div.id = 'black-band';
+  div.role = 'Tabpanel';
 
   const name = document.createElement('p');
   name.innerHTML = review.name;
-  name.setAttribute('id', 'name');
+  name.id = 'name';
   // li.appendChild(name);
 
   const date = document.createElement('p');
   date.innerHTML = review.date;
-  date.setAttribute('id', 'date');
+  date.id = 'date';
   // li.appendChild(date);
   
   div.appendChild(name);
@@ -136,12 +141,12 @@ createReviewHTML = (review) => {
 
   const rating = document.createElement('p');
   rating.innerHTML = `Rating: ${review.rating}`;
-  rating.setAttribute('id', 'rating');
+  rating.id = 'rating';
   li.appendChild(rating);
 
   const comments = document.createElement('p');
   comments.innerHTML = review.comments;
-  comments.setAttribute('id', 'comments')
+  comments.id = 'comments';
   li.appendChild(comments);
 
   return li;
