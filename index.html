@@ -17,10 +17,10 @@
 
   <main id="maincontent">
     <section id="map-container">
-      <div id="map"></div>
+      <div role="presentation" id="map" aria-hidden="true" aria-label="Google map with marked restaurants"></div>
     </section>
     <section>
-      <div class="filter-options">
+      <div role="menubar" class="filter-options" aria-label="filter options of reastaurants">
         <h2>Filter Results</h2>
         <select id="neighborhoods-select" name="neighborhoods" onchange="updateRestaurants()">
           <option value="all">All Neighborhoods</option>
