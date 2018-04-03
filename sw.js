@@ -32,8 +32,9 @@ self.addEventListener('install', function (event) {
 });
 
 self.addEventListener('fetch', function (event) {
+  url = new URL(event.request.url)
   event.respondWith(
-    caches.match(event.request)
+    caches.match(url.pathname)
     .then(function (response) {
       return response || fetch(event.request);
     })
