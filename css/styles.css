@@ -90,14 +90,18 @@ nav h1 a {
   text-transform: uppercase;
 }
 
+#nav-breadcrumb {
+  height: 12vh;
+}
+
 #breadcrumb {
-    padding: 10px 40px 16px;
+    padding: 20px 20px 16px;
     list-style: none;
     background-color: #eee;
     /*font-size: 17px;*/
     margin: 0;
     /*width: calc(50% - 80px);*/
-    /*width: 100%;*/
+    width: 100%;
 }
 
 /* Display list items side by side */
@@ -402,5 +406,12 @@ nav h1 a {
 
   #black-band {
     margin: 0vh 0 3vh 0;  
+  }
+
+  #nav-breadcrumb {
+    height: 8vh;
+  }
+  #breadcrumb {
+    padding: 10px 20px 16px;
   }
 }
