@@ -1,6 +1,8 @@
 let restaurant;
 var map;
 
+DBHelper.DBHelper();
+
 /**
  * Initialize Google map, called from HTML.
  */

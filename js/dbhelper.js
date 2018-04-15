@@ -2,6 +2,10 @@
  * Common database helper functions.
  */
 class DBHelper {
+  static DBHelper() {
+    this.dbPromise = DBHelper.createDatabase();
+  }
+
   /**
    * Database URL.
    * Change this to restaurants.json file location on your server.
@@ -12,16 +16,76 @@ class DBHelper {
   }
 
   /**
+   * Method to open the indexedDB
+   * @return {Promise}
+   */
+  static createDatabase() {
+    console.log("Opening IndexedDB");
+    // If the browser doesn't support service worker,
+    // we don't care about having a database
+    if (!navigator.serviceWorker) {
+      return Promise.resolve();
+    }
+
+    return idb.open("restaurant", 1, function(upgradeDb) {
+      var store = upgradeDb.createObjectStore("restaurants", {
+        keyPath: "id"
+      });
+      store.createIndex("by-id", "id");
+    });
+  };
+
+  /**
    * Fetch all restaurants.
    */
   static fetchRestaurants(callback) {
-    fetch(DBHelper.DATABASE_URL)
-      .then(resp => resp.json())
-      .then(data => callback(null, data))
-      .catch(err => {
-        const error = `Request failed. Returned error ${err}`;
-        callback(error, null);
+    DBHelper.getIndexedRestaurants(callback).then(_ => {
+      console.log("Fetching data");
+      fetch(DBHelper.DATABASE_URL)
+        .then(resp => resp.json())
+        .then(data => {
+          DBHelper.putRestaurantsIndexedDB(data);
+          return data;
+        })
+        .then(data => callback(null, data))
+        .catch(err => {
+          const error = `Request failed. Returned error ${err}`;
+          callback(error, null);
+        });
+    });
+  }
+
+  /**
+   * Gets restaurants in the indexed db
+   */
+  static getIndexedRestaurants(callback) {
+    return this.dbPromise.then(db => {
+      if (!db) return;
+      var index = db
+        .transaction("restaurants")
+        .objectStore("restaurants")
+        .index("by-id");
+
+      return index.getAll().then(restaurants => {
+        callback(null, restaurants);
       });
+    });
+  }
+
+  /**
+   * Stores restaurants in the indexed db
+   * @param  {Object} restaurants
+   */
+  static putRestaurantsIndexedDB(restaurants) {
+    this.dbPromise.then(db => {
+      if (!db) return;
+
+      var tx = db.transaction("restaurants", "readwrite");
+      var store = tx.objectStore("restaurants");
+      restaurants.forEach(restaurant => {
+        store.put(restaurant);
+      });
+    });
   }
 
   /**
@@ -157,7 +221,9 @@ class DBHelper {
    * Restaurant image URL.
    */
   static imageUrlForRestaurant(restaurant) {
-    return `/img/resp/${restaurant.photograph ? restaurant.photograph : 10}-original.jpg`;
+    return `/img/resp/${
+      restaurant.photograph ? restaurant.photograph : 10
+    }-original.jpg`;
   }
 
   /**

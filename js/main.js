@@ -2,27 +2,7 @@ let restaurants, neighborhoods, cuisines;
 var map;
 var markers = [];
 
-/**
- * Method to open the indexedDB
- * @return {Promise}
- */
-createDatabase = () => {
-  console.log("Opening IndexedDB");
-  // If the browser doesn't support service worker,
-  // we don't care about having a database
-  if (!navigator.serviceWorker) {
-    return Promise.resolve();
-  }
-
-  return idb.open("restaurant", 1, function(upgradeDb) {
-    var store = upgradeDb.createObjectStore("restaurants", {
-      keyPath: "id"
-    });
-    store.createIndex("by-id", "id");
-  });
-};
-
-const dbPromise = createDatabase();
+DBHelper.DBHelper();
 
 /**
  * Fetch neighborhoods and cuisines as soon as the page is loaded.

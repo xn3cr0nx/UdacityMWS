@@ -9,7 +9,7 @@ self.addEventListener('install', function (event) {
     'js/main.js',
     'js/restaurant_info.js',
     'js/dbhelper.js',
-    'data/restaurants.json',
+    'js/idb.js',
     'img/resp/1-original.jpg', 'img/resp/1-small.jpg', 'img/resp/1-medium.jpg', 'img/resp/1-large.jpg', 
     'img/resp/2-original.jpg', 'img/resp/2-small.jpg', 'img/resp/2-medium.jpg', 'img/resp/2-large.jpg', 
     'img/resp/3-original.jpg', 'img/resp/3-small.jpg', 'img/resp/3-medium.jpg', 'img/resp/3-large.jpg', 
