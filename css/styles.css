@@ -1,11 +1,14 @@
 @charset "utf-8";
 /* CSS Document */
 
-body,td,th,p{
-	font-family: Arial, Helvetica, sans-serif;
-	font-size: 10pt;
-	color: #333;
-	line-height: 1.5;
+body,
+td,
+th,
+p {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 10pt;
+  color: #333;
+  line-height: 1.5;
 }
 
 td {
@@ -14,38 +17,56 @@ td {
 }
 
 body {
-	background-color: #fdfdfd;
-	margin: 0;
-	position:relative;
+  background-color: #fdfdfd;
+  margin: 0;
+  position: relative;
 }
 
-ul, li {
-	font-family: Arial, Helvetica, sans-serif;
-	font-size: 10pt;
-	color: #333;
+ul,
+li {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 10pt;
+  color: #333;
 }
 
 a {
-	color: orange;
-	text-decoration: none;
+  color: orange;
+  text-decoration: none;
 }
 
-a:hover, a:focus {
-	color: #3397db;
-	text-decoration: none;
+a:hover,
+a:focus {
+  color: #3397db;
+  text-decoration: none;
 }
 
-a img{
-	border: none 0px #fff;
+a img {
+  border: none 0px #fff;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: Arial, Helvetica, sans-serif;
   margin: 0 0 20px;
 }
 
-article, aside, canvas, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
-	display: block;
+article,
+aside,
+canvas,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section {
+  display: block;
 }
 
 section {
@@ -95,38 +116,38 @@ nav h1 a {
 }
 
 #breadcrumb {
-    padding: 20px 20px 16px;
-    list-style: none;
-    background-color: #eee;
-    /*font-size: 17px;*/
-    margin: 0;
-    /*width: calc(50% - 80px);*/
-    width: 100%;
+  padding: 20px 20px 16px;
+  list-style: none;
+  background-color: #eee;
+  /*font-size: 17px;*/
+  margin: 0;
+  /*width: calc(50% - 80px);*/
+  width: 100%;
 }
 
 /* Display list items side by side */
 #breadcrumb li {
-    display: inline;
-    font-size: 1rem;
+  display: inline;
+  font-size: 1rem;
 }
 
 /* Add a slash symbol (/) before/behind each list item */
-#breadcrumb li+li:before {
-    padding: 8px;
-    color: black;
-    content: "/\00a0";
+#breadcrumb li + li:before {
+  padding: 8px;
+  color: black;
+  content: "/\00a0";
 }
 
 /* Add a color to all links inside the list */
 #breadcrumb li a {
-    color: #0275d8;
-    text-decoration: none;
+  color: #0275d8;
+  text-decoration: none;
 }
 
 /* Add a color on mouse-over */
 #breadcrumb li a:hover {
-    color: #01447e;
-    text-decoration: underline;
+  color: #01447e;
+  text-decoration: underline;
 }
 
 /* ====================== Map ====================== */
@@ -146,7 +167,7 @@ nav h1 a {
 .filter-options {
   /*width: 100%;*/
   /*height: 50px;*/
-  background-color: #3397DB;
+  background-color: #3397db;
   /*align-items: center;*/
   padding: 10px;
   margin-top: -4vh;
@@ -163,7 +184,7 @@ nav h1 a {
 .filter-options select {
   background-color: white;
   border: 1px solid #fff;
-  font-family: Arial,sans-serif;
+  font-family: Arial, sans-serif;
   font-size: 1rem;
   height: 2rem;
   letter-spacing: 0;
@@ -185,13 +206,14 @@ nav h1 a {
 }
 
 #restaurants-list li {
+  position: relative;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   background-color: #fff;
   border: 2px solid #ccc;
-  font-family: Arial,sans-serif;
+  font-family: Arial, sans-serif;
   margin: 15px;
   min-height: 380px;
   /*padding: 0 30px 25px;*/
@@ -212,7 +234,7 @@ nav h1 a {
 
 #restaurants-list li h1 {
   color: #f18200;
-  font-family: Arial,sans-serif;
+  font-family: Arial, sans-serif;
   font-size: 14pt;
   font-weight: 200;
   letter-spacing: 0;
@@ -237,6 +259,23 @@ nav h1 a {
   text-align: center;
   text-decoration: none;
   text-transform: uppercase;
+}
+
+#restaurants-list li div {
+  border-radius: 50%;
+  /* background-color: white; */
+  background: radial-gradient(ellipse at center,  orange 40%,white 67%);
+  cursor: pointer;
+  position: absolute;
+  top: 0;
+  left: 87%;
+  /* background-color: transparent; */
+  color: rgb(212, 71, 130);
+  font-size: 2rem;
+}
+
+#restaurants-list li div i {
+  padding: 10px;
 }
 
 /* ====================== Restaurant Details ====================== */
@@ -272,7 +311,7 @@ nav h1 a {
 
 #restaurant-name {
   color: #f18200;
-  font-family: Arial,sans-serif;
+  font-family: Arial, sans-serif;
   font-size: 20pt;
   font-weight: 200;
   letter-spacing: 0;
@@ -282,7 +321,7 @@ nav h1 a {
 }
 
 #restaurant-img {
-	width: 90%;
+  width: 90%;
 }
 
 #restaurant-address {
@@ -300,10 +339,11 @@ nav h1 a {
   padding: 2px 0;
   text-align: center;
   text-transform: uppercase;
-	width: 90%;
+  width: 90%;
 }
 
-#restaurant-container, #reviews-container {
+#restaurant-container,
+#reviews-container {
   margin-left: 8vw;
 }
 
@@ -311,7 +351,8 @@ nav h1 a {
   font-size: 2rem;
 }
 
-#reviews-container, #reviews-list {
+#reviews-container,
+#reviews-list {
   display: flex;
   flex-direction: column;
   /*align-items: center;*/
@@ -363,7 +404,8 @@ nav h1 a {
   border-radius: 14px;
 }
 
-#reviews-list li #name, #reviews-list li #date {
+#reviews-list li #name,
+#reviews-list li #date {
   color: white;
   font-size: 1rem;
 }
@@ -376,10 +418,9 @@ nav h1 a {
   width: 100%;
 }
 
-
-
 @media only screen and (min-width: 600px) {
-  #restaurants-list, #reviews-list {
+  #restaurants-list,
+  #reviews-list {
     display: grid;
     /*grid-gap: 10%;*/
     grid-template-columns: repeat(2, 50%);
@@ -387,26 +428,28 @@ nav h1 a {
 }
 
 @media only screen and (min-width: 800px) {
-  #restaurants-list, #reviews-list {
+  #restaurants-list,
+  #reviews-list {
     display: grid;
     /*grid-gap: 7%;*/
     grid-template-columns: repeat(3, 33%);
   }
-  
+
   nav h1 a {
     font-size: 15pt;
   }
 }
 
 @media only screen and (min-width: 1000px) {
-  #restaurants-list, #reviews-list {
+  #restaurants-list,
+  #reviews-list {
     display: grid;
     /*grid-gap: 5%;*/
     grid-template-columns: repeat(4, 25%);
   }
 
   #black-band {
-    margin: 0vh 0 3vh 0;  
+    margin: 0vh 0 3vh 0;
   }
 
   #nav-breadcrumb {
@@ -414,5 +457,9 @@ nav h1 a {
   }
   #breadcrumb {
     padding: 10px 20px 16px;
+  }
+
+  #restaurants-list li div {
+    left: 82%;
   }
 }

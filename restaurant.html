@@ -9,6 +9,8 @@
   <link rel="stylesheet" href="css/styles.css" type="text/css">
   <meta name="viewport" content="width=device-width" initial-scale=1/>
   <meta name="theme-color" content="orange" />
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg"
+    crossorigin="anonymous">
   <title>Restaurant Info</title>
 </head>
 
@@ -17,12 +19,16 @@
   <header>
     <!-- Beginning nav -->
     <nav>
-      <h1><a href="/">Restaurant Reviews</a></h1>
+      <h1>
+        <a href="/">Restaurant Reviews</a>
+      </h1>
     </nav>
     <!-- Beginning breadcrumb -->
     <nav id="nav-breadcrumb" aria-label="Breadcrumb">
       <ul id="breadcrumb" aria-current="page">
-        <li><a href="/">Home</a></li>
+        <li>
+          <a href="/">Home</a>
+        </li>
       </ul>
     </nav>
     <!-- End breadcrumb -->
@@ -56,7 +62,10 @@
 
   <!-- Beginning footer -->
   <footer id="footer">
-    Copyright (c) 2017 <a href="/"><strong>Restaurant Reviews</strong></a> All Rights Reserved.
+    Copyright (c) 2017
+    <a href="/">
+      <strong>Restaurant Reviews</strong>
+    </a> All Rights Reserved.
   </footer>
   <!-- End footer -->
 
@@ -72,8 +81,8 @@
   <script>
     if (navigator.serviceWorker) {
       navigator.serviceWorker.register('sw.js')
-      .then(registration => console.log('Service worker registered', registration))
-      .catch(err => console.log(err))
+        .then(registration => console.log('Service worker registered', registration))
+        .catch(err => console.log(err))
     }
   </script>
   <!-- End scripts -->

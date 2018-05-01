@@ -165,6 +165,19 @@ createRestaurantHTML = restaurant => {
   name.innerHTML = restaurant.name;
   li.append(name);
 
+  const heart_icon = document.createElement("div");
+  let argument = `heartRestaurant(${restaurant.id}, ${restaurant.is_favorite})`;
+  heart_icon.setAttribute("onClick", argument);
+  heart_icon.setAttribute("role", "button");
+  heart_icon.setAttribute("id", `heart${restaurant.id}`);
+  const heart = document.createElement("i");
+  heart.setAttribute(
+    "class",
+    restaurant.is_favorite ? "fas fa-heart" : "far fa-heart"
+  );
+  heart_icon.appendChild(heart);
+  li.append(heart_icon);
+
   const neighborhood = document.createElement("p");
   neighborhood.innerHTML = restaurant.neighborhood;
   li.append(neighborhood);
@@ -195,4 +208,18 @@ addMarkersToMap = (restaurants = self.restaurants) => {
     });
     self.markers.push(marker);
   });
+};
+
+heartRestaurant = (restaurant, is_favorite) => {
+  return fetch(
+    `http://localhost:1337/restaurants/${restaurant}/?is_favorite=${is_favorite ? false : true}`,
+    { method: "PUT" }
+  )
+    .then(resp => {
+      console.log(resp);
+      let icon = document.getElementById(`heart${restaurant}`);
+      let heart = icon.childNodes[0];
+      heart.setAttribute("class", is_favorite ? "far fa-heart" : "fas fa-heart");
+    })
+    .catch(err => console.log(err));
 };
