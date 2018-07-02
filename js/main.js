@@ -132,6 +132,9 @@ resetRestaurants = restaurants => {
  * Create all restaurants HTML and add them to the webpage.
  */
 fillRestaurantsHTML = (restaurants = self.restaurants) => {
+  console.log("====================================");
+  console.log("RISTORANTI", restaurants);
+  console.log("====================================");
   const ul = document.getElementById("restaurants-list");
   restaurants.forEach(restaurant => {
     ul.append(createRestaurantHTML(restaurant));
@@ -211,15 +214,24 @@ addMarkersToMap = (restaurants = self.restaurants) => {
 };
 
 heartRestaurant = (restaurant, is_favorite) => {
+  console.log("====================================");
+  console.log("RESTAURANT HEART", restaurant, is_favorite);
+  console.log("====================================");
   return fetch(
-    `http://localhost:1337/restaurants/${restaurant}/?is_favorite=${is_favorite ? false : true}`,
+    `http://localhost:1337/restaurants/${restaurant}/?is_favorite=${
+      is_favorite ? false : true
+    }`,
     { method: "PUT" }
   )
     .then(resp => {
       console.log(resp);
+      updateRestaurants();
       let icon = document.getElementById(`heart${restaurant}`);
       let heart = icon.childNodes[0];
-      heart.setAttribute("class", is_favorite ? "far fa-heart" : "fas fa-heart");
+      heart.setAttribute(
+        "class",
+        is_favorite ? "far fa-heart" : "fas fa-heart"
+      );
     })
     .catch(err => console.log(err));
 };

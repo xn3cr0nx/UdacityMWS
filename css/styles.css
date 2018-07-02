@@ -264,7 +264,7 @@ nav h1 a {
 #restaurants-list li div {
   border-radius: 50%;
   /* background-color: white; */
-  background: radial-gradient(ellipse at center,  orange 40%,white 67%);
+  background: radial-gradient(ellipse at center, orange 40%, white 67%);
   cursor: pointer;
   position: absolute;
   top: 0;
@@ -416,6 +416,47 @@ nav h1 a {
 
 #restaurant-hours {
   width: 100%;
+}
+
+#reviews-form {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  width: 80%;
+  margin: 2rem;
+  border: solid 2px black;
+}
+#reviews-form .title {
+  width: 100%;
+  padding: 1rem;
+  color: white;
+  background: black;
+  margin: 0;
+}
+#reviews-form form div {
+  margin: 1rem;
+}
+#reviews-form label {
+  margin: 1rem;
+  padding: 1rem;
+}
+#reviews-form input {
+  position: absolute;
+  left: 25%;
+}
+#reviews-form #stars label {
+  margin-right: 10%;
+}
+#stars span {
+  cursor: pointer;
+}
+#stars .checked {
+  color: orange;
+}
+#reviews-form .formSubmit {
+  margin-left: 25%;
+  width: 8rem;
+  height: 3rem;
 }
 
 @media only screen and (min-width: 600px) {
