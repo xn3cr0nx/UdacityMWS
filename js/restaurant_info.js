@@ -1,8 +1,6 @@
 let restaurant;
 var map;
 
-DBHelper.DBHelper();
-
 /**
  * Initialize Google map, called from HTML.
  */
@@ -54,9 +52,6 @@ fetchRestaurantFromURL = callback => {
  * Create restaurant HTML and add it to the webpage
  */
 fillRestaurantHTML = (restaurant = self.restaurant) => {
-  console.log("====================================");
-  console.log("HERE I AM");
-  console.log("====================================");
   const name = document.getElementById("restaurant-name");
   name.innerHTML = restaurant.name;
 
@@ -86,7 +81,9 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
     fillRestaurantHoursHTML();
   }
   // fill reviews
-  fillReviewsHTML();
+  fetchReviews().then(_ => {
+    fillReviewsHTML();
+  });
 
   // create reviews form
   fillFormHTML();
@@ -151,7 +148,7 @@ createReviewHTML = review => {
   // li.appendChild(name);
 
   const date = document.createElement("p");
-  date.innerHTML = review.date;
+  date.innerHTML = new Date(review.createdAt).toDateString();
   date.id = "date";
   // li.appendChild(date);
 
@@ -177,29 +174,50 @@ createReviewHTML = review => {
  */
 fillFormHTML = (restaurant = self.restaurant) => {
   const container = document.getElementById("review-form");
-
-  const submit = document.createElement("button");
-  submit.innerHTML = "Submit";
-  submit.setAttribute("class", "formSubmit");
-  let name = document.getElementsByClassName("name").value;
-  let comment = document.getElementsByClassName("comment").value;
-  let rating = 2;
-  let call = `postReview(${restaurant.id}, ${name}, ${rating}, ${comment})`;
-  submit.setAttribute("onClick", call);
-
   [...Array(6).keys()].slice(1).forEach(e => {
     document
       .getElementById(`star-${e}`)
       .setAttribute("onClick", `handleStars("star-${e}")`);
   });
+};
 
-  container.appendChild(submit);
+submitting = () => {
+  let name = document.getElementsByClassName("name")[0].value;
+  let comments = document.getElementsByClassName("comment")[0].value;
+  if (!name || !comments) {
+    const old_message = document.getElementsByClassName("message");
+    if (old_message[0]) return;
+    else {
+      const container = document.getElementById("review-form");
+      let message = document.createElement("p");
+      message.classList.add("message");
+      message.innerHTML = "You have to fill the form";
+      container.appendChild(message);
+      setTimeout(() => {
+        message.parentNode.removeChild(message);
+      }, 3000);
+      return;
+    }
+  }
+  postReview(self.restaurant.id, name, countStars(), comments);
 };
 
 handleStars = id => {
-  [...Array(id[5] + 1).keys()].slice(1).forEach(e => {
-    document.getElementById(`star-${e}`).className = "fa fa-star checked";
+  [...Array(6).keys()].slice(1).forEach(e => {
+    document.getElementById(`star-${e}`).classList.remove("checked");
   });
+  [...Array(parseInt(id[5]) + 1).keys()].slice(1).forEach(e => {
+    document.getElementById(`star-${e}`).classList.add("checked");
+  });
+};
+
+countStars = () => {
+  let counter = 0;
+  [...Array(6).keys()].slice(1).forEach(e => {
+    if (document.getElementById(`star-${e}`).classList.contains("checked"))
+      counter++;
+  });
+  return counter;
 };
 
 /**
@@ -226,6 +244,23 @@ getParameterByName = (name, url) => {
 };
 
 /**
+ * Fetch restaurant reviews
+ */
+fetchReviews = () => {
+  return new Promise((res, rej) => {
+    return fetch(
+      `http://localhost:1337/reviews/?restaurant_id=${self.restaurant.id}`
+    )
+      .then(resp => resp.json())
+      .then(data => {
+        self.restaurant.reviews = data;
+        res(data);
+      })
+      .catch(err => rej(err));
+  });
+};
+
+/**
  * Create a new restaurant review
  */
 postReview = (id, name, rating, comments) => {
@@ -238,8 +273,27 @@ postReview = (id, name, rating, comments) => {
       comments: comments
     }
   })
-    .then(resp => {
-      console.log("POST RESPONSE", resp);
+    .then(resp => resp.json())
+    .then(data => {
+      console.log("POST RESPONSE", data);
+      document.getElementsByClassName("name")[0].value = "";
+      document.getElementsByClassName("comment")[0].value = "";
+      [...Array(6).keys()].slice(1).forEach(e => {
+        document.getElementById(`star-${e}`).classList.remove("checked");
+      });
+      const old_message = document.getElementsByClassName("message");
+      if (old_message[0]) return;
+      else {
+        const container = document.getElementById("review-form");
+        let message = document.createElement("p");
+        message.classList.add("message");
+        message.innerHTML = "Review submitted";
+        container.appendChild(message);
+        setTimeout(() => {
+          message.parentNode.removeChild(message);
+        }, 3000);
+        return;
+      }
     })
     .catch(err => console.log(err));
 };

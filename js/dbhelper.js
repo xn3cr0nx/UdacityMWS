@@ -33,32 +33,48 @@ class DBHelper {
       });
       store.createIndex("by-id", "id");
     });
-  };
+  }
 
   /**
    * Fetch all restaurants.
    */
   static fetchRestaurants(callback) {
-    DBHelper.getIndexedRestaurants(callback).then(_ => {
-      console.log("Fetching data");
-      fetch(DBHelper.DATABASE_URL)
-        .then(resp => resp.json())
-        .then(data => {
-          DBHelper.putRestaurantsIndexedDB(data);
-          return data;
-        })
-        .then(data => callback(null, data))
-        .catch(err => {
-          const error = `Request failed. Returned error ${err}`;
-          callback(error, null);
-        });
-    });
+    // DBHelper.getIndexedRestaurants(callback).then(_ => {
+    //   fetch(DBHelper.DATABASE_URL)
+    //     .then(resp => resp.json())
+    //     .then(data => {
+    //       DBHelper.putRestaurantsIndexedDB(data);
+    //       return data;
+    //     })
+    //     .catch(err => {
+    //       const error = `Request failed. Returned error ${err}`;
+    //       return error;
+    //       // callback(error, null);
+    //     });
+    // });
+    DBHelper.getIndexedRestaurants()
+      .then(restaurants => {
+        fetch(DBHelper.DATABASE_URL)
+          .then(resp => resp.json())
+          .then(data => {
+            DBHelper.putRestaurantsIndexedDB(data);
+            callback(null, data);
+          })
+          .catch(err => {
+            const error = `Request failed. Returned error ${err}`;
+            callback(error, restaurants);
+          });
+      })
+      .catch(err => {
+        const error = `Request failed. Returned error ${err}`;
+        callback(error, null);
+      });
   }
 
   /**
    * Gets restaurants in the indexed db
    */
-  static getIndexedRestaurants(callback) {
+  static getIndexedRestaurants() {
     return this.dbPromise.then(db => {
       if (!db) return;
       var index = db
@@ -67,7 +83,8 @@ class DBHelper {
         .index("by-id");
 
       return index.getAll().then(restaurants => {
-        callback(null, restaurants);
+        // callback(null, restaurants);
+        return restaurants;
       });
     });
   }

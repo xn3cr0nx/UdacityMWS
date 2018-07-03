@@ -2,8 +2,6 @@ let restaurants, neighborhoods, cuisines;
 var map;
 var markers = [];
 
-DBHelper.DBHelper();
-
 /**
  * Fetch neighborhoods and cuisines as soon as the page is loaded.
  */
@@ -98,19 +96,29 @@ updateRestaurants = () => {
   const cuisine = cSelect[cIndex].value;
   const neighborhood = nSelect[nIndex].value;
 
-  DBHelper.fetchRestaurantByCuisineAndNeighborhood(
-    cuisine,
-    neighborhood,
-    (error, restaurants) => {
-      if (error) {
-        // Got an error!
-        console.error(error);
-      } else {
-        resetRestaurants(restaurants);
-        fillRestaurantsHTML();
-      }
+  // DBHelper.fetchRestaurantByCuisineAndNeighborhood(
+  //   cuisine,
+  //   neighborhood,
+  //   (error, restaurants) => {
+  //     if (error) {
+  //       // Got an error!
+  //       console.error(error);
+  //     } else {
+  //       resetRestaurants(restaurants);
+  //       fillRestaurantsHTML();
+  //     }
+  //   }
+  // );
+
+  DBHelper.fetchRestaurants((error, restaurants) => {
+    if (error) {
+      // Got an error!
+      console.error(error);
+    } else {
+      resetRestaurants(restaurants);
+      fillRestaurantsHTML();
     }
-  );
+  });
 };
 
 /**
@@ -132,9 +140,6 @@ resetRestaurants = restaurants => {
  * Create all restaurants HTML and add them to the webpage.
  */
 fillRestaurantsHTML = (restaurants = self.restaurants) => {
-  console.log("====================================");
-  console.log("RISTORANTI", restaurants);
-  console.log("====================================");
   const ul = document.getElementById("restaurants-list");
   restaurants.forEach(restaurant => {
     ul.append(createRestaurantHTML(restaurant));
@@ -176,7 +181,7 @@ createRestaurantHTML = restaurant => {
   const heart = document.createElement("i");
   heart.setAttribute(
     "class",
-    restaurant.is_favorite ? "fas fa-heart" : "far fa-heart"
+    restaurant.is_favorite === "true" ? "fas fa-heart" : "far fa-heart"
   );
   heart_icon.appendChild(heart);
   li.append(heart_icon);
@@ -199,6 +204,20 @@ createRestaurantHTML = restaurant => {
   return li;
 };
 
+heartRestaurant = (restaurant, is_favorite) => {
+  return fetch(
+    `http://localhost:1337/restaurants/${restaurant}/?is_favorite=${
+      is_favorite || is_favorite === "true" ? false : true
+    }`,
+    { method: "PUT" }
+  )
+    .then(resp => resp.json())
+    .then(data => {
+      updateRestaurants();
+    })
+    .catch(err => console.log(err));
+};
+
 /**
  * Add markers for current restaurants to the map.
  */
@@ -211,27 +230,4 @@ addMarkersToMap = (restaurants = self.restaurants) => {
     });
     self.markers.push(marker);
   });
-};
-
-heartRestaurant = (restaurant, is_favorite) => {
-  console.log("====================================");
-  console.log("RESTAURANT HEART", restaurant, is_favorite);
-  console.log("====================================");
-  return fetch(
-    `http://localhost:1337/restaurants/${restaurant}/?is_favorite=${
-      is_favorite ? false : true
-    }`,
-    { method: "PUT" }
-  )
-    .then(resp => {
-      console.log(resp);
-      updateRestaurants();
-      let icon = document.getElementById(`heart${restaurant}`);
-      let heart = icon.childNodes[0];
-      heart.setAttribute(
-        "class",
-        is_favorite ? "far fa-heart" : "fas fa-heart"
-      );
-    })
-    .catch(err => console.log(err));
 };

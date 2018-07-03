@@ -59,12 +59,12 @@
 
     <section id="reviews-form">
       <p class="title">SUBMIT YOUR REVIEW</p>
-      <form id="review-form">
+      <form id="review-form" onsubmit="return false">
         <div id="stars">
           <label>Stars</label>
-          <span id="star-1" class="fa fa-star checked"></span>
-          <span id="star-2" class="fa fa-star checked"></span>
-          <span id="star-3" class="fa fa-star checked"></span>
+          <span id="star-1" class="fa fa-star"></span>
+          <span id="star-2" class="fa fa-star"></span>
+          <span id="star-3" class="fa fa-star"></span>
           <span id="star-4" class="fa fa-star"></span>
           <span id="star-5" class="fa fa-star"></span>
         </div>
@@ -76,6 +76,7 @@
           <label for="comment">Comment</label>
           <input class="comment" type="text" />
         </div>
+        <button type="button" class="formSubmit" onclick="return submitting()">Submit</button>
       </form>
     </section>
 
@@ -107,7 +108,9 @@
         .then(registration => console.log('Service worker registered', registration))
         .catch(err => console.log(err))
     }
+    DBHelper.DBHelper()
   </script>
+
   <!-- End scripts -->
 
 </body>

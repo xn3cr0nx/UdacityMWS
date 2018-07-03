@@ -343,7 +343,8 @@ nav h1 a {
 }
 
 #restaurant-container,
-#reviews-container {
+#reviews-container,
+#reviews-form {
   margin-left: 8vw;
 }
 
@@ -422,8 +423,8 @@ nav h1 a {
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  width: 80%;
-  margin: 2rem;
+  width: 60%;
+  margin-bottom: 2rem;
   border: solid 2px black;
 }
 #reviews-form .title {
