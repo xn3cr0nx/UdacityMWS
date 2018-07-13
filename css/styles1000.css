@@ -1,0 +1,23 @@
+@media only screen and (min-width: 1000px) {
+  #restaurants-list,
+  #reviews-list {
+    display: grid;
+    /*grid-gap: 5%;*/
+    grid-template-columns: repeat(4, 25%);
+  }
+
+  #black-band {
+    margin: 0vh 0 3vh 0;
+  }
+
+  #nav-breadcrumb {
+    height: 8vh;
+  }
+  #breadcrumb {
+    padding: 10px 20px 16px;
+  }
+
+  #restaurants-list li div {
+    left: 82%;
+  }
+}

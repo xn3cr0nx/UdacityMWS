@@ -1,0 +1,12 @@
+@media only screen and (min-width: 800px) {
+  #restaurants-list,
+  #reviews-list {
+    display: grid;
+    /*grid-gap: 7%;*/
+    grid-template-columns: repeat(3, 33%);
+  }
+
+  nav h1 a {
+    font-size: 15pt;
+  }
+}

@@ -1,0 +1,8 @@
+@media only screen and (min-width: 600px) {
+  #restaurants-list,
+  #reviews-list {
+    display: grid;
+    /*grid-gap: 10%;*/
+    grid-template-columns: repeat(2, 50%);
+  }
+}
