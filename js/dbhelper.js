@@ -4,6 +4,7 @@
 class DBHelper {
   static DBHelper() {
     this.dbPromise = DBHelper.createDatabase();
+    this.dbReviews = DBHelper.createReviewsDatabase();
   }
 
   /**
@@ -32,6 +33,59 @@ class DBHelper {
         keyPath: "id"
       });
       store.createIndex("by-id", "id");
+    });
+  }
+
+  /**
+   * Method to open the indexedDB
+   * @return {Promise}
+   */
+  static createReviewsDatabase() {
+    console.log("Opening Reviews IndexedDB");
+    // If the browser doesn't support service worker,
+    // we don't care about having a database
+    if (!navigator.serviceWorker) {
+      return Promise.resolve();
+    }
+
+    return idb.open("review", 1, function(upgradeDb) {
+      var store = upgradeDb.createObjectStore("reviews", {
+        keyPath: "restaurant_id"
+      });
+      store.createIndex("by-id", "restaurant_id");
+    });
+  }
+
+  /**
+   * Method to insert a review in the indexed db
+   */
+  static appendReview(review) {
+    this.dbReviews.then(db => {
+      if (!db) return;
+
+      var tx = db.transaction("reviews", "readwrite");
+      var store = tx.objectStore("reviews");
+      store.put(review);
+    });
+  }
+
+  /**
+   * Method to fetch reviews from db
+   */
+  static fetchReviewsDb(restaurant_id) {
+    return this.dbReviews.then(db => {
+      if (!db) return;
+      var index = db
+        .transaction("reviews")
+        .objectStore("reviews")
+        .index("by-id");
+
+      return index.getAll().then(reviews => {
+        db.transaction("reviews", "readwrite")
+          .objectStore("reviews")
+          .delete(restaurant_id);
+        return reviews;
+      });
     });
   }
 

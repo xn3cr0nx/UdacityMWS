@@ -259,9 +259,25 @@ getParameterByName = (name, url) => {
  */
 fetchReviews = () => {
   return new Promise((res, rej) => {
-    return fetch(
-      `http://localhost:1337/reviews/?restaurant_id=${self.restaurant.id}`
-    )
+    DBHelper.fetchReviewsDb(self.restaurant.id)
+      .then(reviews => {
+        if (reviews) {
+          let promises = reviews.map(review => {
+            return postReview(
+              review.restaurant_id,
+              review.name,
+              review.rating,
+              review.comments
+            );
+          });
+          return Promise.all(promises);
+        } else return null;
+      })
+      .then(resp => {
+        return fetch(
+          `http://localhost:1337/reviews/?restaurant_id=${self.restaurant.id}`
+        );
+      })
       .then(resp => resp.json())
       .then(data => {
         self.restaurant.reviews = data;
@@ -275,36 +291,49 @@ fetchReviews = () => {
  * Create a new restaurant review
  */
 postReview = (id, name, rating, comments) => {
+  const body = {
+    restaurant_id: id,
+    name: name,
+    rating: rating,
+    comments: comments
+  };
   fetch("http://localhost:1337/reviews/", {
     method: "POST",
-    body: {
-      restaurant_id: id,
-      name: name,
-      rating: rating,
-      comments: comments
-    }
+    body: JSON.stringify(body)
   })
     .then(resp => resp.json())
     .then(data => {
       console.log("POST RESPONSE", data);
-      document.getElementsByClassName("name")[0].value = "";
-      document.getElementsByClassName("comment")[0].value = "";
-      [...Array(6).keys()].slice(1).forEach(e => {
-        document.getElementById(`star-${e}`).classList.remove("checked");
-      });
-      const old_message = document.getElementsByClassName("message");
-      if (old_message[0]) return;
-      else {
-        const container = document.getElementById("review-form");
-        let message = document.createElement("p");
-        message.classList.add("message");
-        message.innerHTML = "Review submitted";
-        container.appendChild(message);
-        setTimeout(() => {
-          message.parentNode.removeChild(message);
-        }, 3000);
-        return;
-      }
+      handleReview();
+      return fetchReviews();
     })
-    .catch(err => console.log(err));
+    .then(reviews => {
+      fillReviewsHTML(reviews);
+    })
+    .catch(err => {
+      console.log("Error in request, caching review", err);
+      //I need to cache body in indexed db and retry when user reconnect
+      DBHelper.appendReview(body);
+      handleReview();
+    });
+};
+
+handleReview = () => {
+  document.getElementById("form-name").value = "";
+  document.getElementById("form-comment").value = "";
+  [...Array(6).keys()].slice(1).forEach(e => {
+    document.getElementById(`star-${e}`).classList.remove("checked");
+  });
+  const old_message = document.getElementsByClassName("message");
+  if (old_message[0]) return;
+  else {
+    const container = document.getElementById("review-form");
+    let message = document.createElement("p");
+    message.classList.add("message");
+    message.innerHTML = "Review submitted";
+    container.appendChild(message);
+    setTimeout(() => {
+      message.parentNode.removeChild(message);
+    }, 3000);
+  }
 };
