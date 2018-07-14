@@ -18,6 +18,8 @@ window.initMap = () => {
       fillBreadcrumb();
       DBHelper.mapMarkerForRestaurant(self.restaurant, self.map);
     }
+    let event = new CustomEvent("filled");
+    document.dispatchEvent(event);
   });
 };
 
@@ -59,17 +61,22 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
   address.innerHTML = restaurant.address;
 
   const image = document.getElementById("restaurant-img");
-  image.className = "restaurant-img";
+  image.classList.add("restaurant-img");
+  image.classList.add("lazy");
   image.alt = `restaurant ${restaurant.name} image`;
   const original_image = DBHelper.imageUrlForRestaurant(restaurant);
-  image.src = original_image;
-  image.srcset = `${original_image.replace(
-    "-original",
-    "-small"
-  )} 400w, ${original_image.replace(
-    "-original",
-    "-medium"
-  )} 800w, ${original_image.replace("-original", "-large")} 1000w`;
+  image.src = "/img/placeholder.webp";
+  image.setAttribute("data-src", original_image);
+  image.setAttribute(
+    "data-srcset",
+    `${original_image.replace(
+      "-original",
+      "-small"
+    )} 400w, ${original_image.replace(
+      "-original",
+      "-medium"
+    )} 800w, ${original_image.replace("-original", "-large")} 1000w`
+  );
   image.sizes = "(min-width: 800px) 40vw, 95vw";
 
   const cuisine = document.getElementById("restaurant-cuisine");
@@ -116,9 +123,11 @@ fillRestaurantHoursHTML = (
  */
 fillReviewsHTML = (reviews = self.restaurant.reviews) => {
   const container = document.getElementById("reviews-container");
-  const title = document.createElement("h2");
-  title.innerHTML = "Reviews";
-  container.appendChild(title);
+  if (!container.querySelector("h2")) {
+    const title = document.createElement("h2");
+    title.innerHTML = "Reviews";
+    container.appendChild(title);
+  }
 
   if (!reviews) {
     const noReviews = document.createElement("p");
@@ -128,7 +137,8 @@ fillReviewsHTML = (reviews = self.restaurant.reviews) => {
   }
   const ul = document.getElementById("reviews-list");
   reviews.forEach(review => {
-    ul.appendChild(createReviewHTML(review));
+    if (!document.getElementById(`review${review.id}`))
+      ul.appendChild(createReviewHTML(review));
   });
   container.appendChild(ul);
 };
@@ -138,6 +148,7 @@ fillReviewsHTML = (reviews = self.restaurant.reviews) => {
  */
 createReviewHTML = review => {
   const li = document.createElement("li");
+  li.id = `review${review.id}`;
   const div = document.createElement("div");
   div.id = "black-band";
   div.role = "Tabpanel";
@@ -182,8 +193,8 @@ fillFormHTML = (restaurant = self.restaurant) => {
 };
 
 submitting = () => {
-  let name = document.getElementsByClassName("name")[0].value;
-  let comments = document.getElementsByClassName("comment")[0].value;
+  let name = document.getElementById("form-name").value;
+  let comments = document.getElementById("form-comment").value;
   if (!name || !comments) {
     const old_message = document.getElementsByClassName("message");
     if (old_message[0]) return;

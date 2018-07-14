@@ -5,7 +5,7 @@ var markers = [];
 /**
  * Fetch neighborhoods and cuisines as soon as the page is loaded.
  */
-document.addEventListener("DOMContentLoaded", event => {
+document.addEventListener("load", event => {
   fetchNeighborhoods();
   fetchCuisines();
 });
@@ -118,6 +118,8 @@ updateRestaurants = () => {
       resetRestaurants(restaurants);
       fillRestaurantsHTML();
     }
+    let event = new CustomEvent("filled");
+    document.dispatchEvent(event);
   });
 };
 
@@ -142,7 +144,8 @@ resetRestaurants = restaurants => {
 fillRestaurantsHTML = (restaurants = self.restaurants) => {
   const ul = document.getElementById("restaurants-list");
   restaurants.forEach(restaurant => {
-    ul.append(createRestaurantHTML(restaurant));
+    if (!document.getElementById(`restaurant${restaurant.id}`))
+      ul.append(createRestaurantHTML(restaurant));
   });
   addMarkersToMap();
 };
@@ -152,20 +155,26 @@ fillRestaurantsHTML = (restaurants = self.restaurants) => {
  */
 createRestaurantHTML = restaurant => {
   const li = document.createElement("li");
+  li.id = `restaurant${restaurant.id}`;
 
   const image = document.createElement("img");
-  image.className = "restaurant-img";
+  image.classList.add("restaurant-img");
+  image.classList.add("lazy");
   // image.src = DBHelper.imageUrlForRestaurant(restaurant);
   image.alt = `restaurant ${restaurant.name} image`;
   const original_image = DBHelper.imageUrlForRestaurant(restaurant);
-  image.src = original_image;
-  image.srcset = `${original_image.replace(
-    "-original",
-    "-small"
-  )} 200w, ${original_image.replace(
-    "-original",
-    "-medium"
-  )} 400w, ${original_image.replace("-original", "-large")} 600w`;
+  image.src = "/img/placeholder.webp";
+  image.setAttribute("data-src", original_image);
+  image.setAttribute(
+    "data-srcset",
+    `${original_image.replace(
+      "-original",
+      "-small"
+    )} 200w, ${original_image.replace(
+      "-original",
+      "-medium"
+    )} 400w, ${original_image.replace("-original", "-large")} 600w`
+  );
   // image.sizes = '(min-width: 800px) 50vw, 85vw';
   li.append(image);
 
@@ -177,6 +186,7 @@ createRestaurantHTML = restaurant => {
   let argument = `heartRestaurant(${restaurant.id}, ${restaurant.is_favorite})`;
   heart_icon.setAttribute("onClick", argument);
   heart_icon.setAttribute("role", "button");
+  heart_icon.setAttribute("aria-label", `heart_restaurant_${restaurant.id}`);
   heart_icon.setAttribute("id", `heart${restaurant.id}`);
   const heart = document.createElement("i");
   heart.setAttribute(

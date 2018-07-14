@@ -58,6 +58,7 @@
 
     DBHelper.DBHelper()
   </script>
+
   <script>
     var loadDeferredStyles = function () {
       var addStylesNode = document.getElementById("deferred-styles");
@@ -70,6 +71,31 @@
       window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
     if (raf) raf(function () { window.setTimeout(loadDeferredStyles, 0); });
     else window.addEventListener('load', loadDeferredStyles);
+  </script>
+
+  <script>
+    document.addEventListener("filled", function () {
+      var lazyImages = [].slice.call(document.querySelectorAll("img.lazy"));
+      if ("IntersectionObserver" in window) {
+        let lazyImageObserver = new IntersectionObserver(function (entries, observer) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+              let lazyImage = entry.target;
+              lazyImage.src = lazyImage.dataset.src;
+              lazyImage.srcset = lazyImage.dataset.srcset;
+              lazyImage.removeAttribute("data-src");
+              lazyImage.removeAttribute("data-srcset");
+              lazyImage.classList.remove("lazy");
+              lazyImageObserver.unobserve(lazyImage);
+            }
+          });
+        });
+
+        lazyImages.forEach(function (lazyImage) {
+          lazyImageObserver.observe(lazyImage);
+        });
+      }
+    });
   </script>
 
 

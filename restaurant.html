@@ -13,6 +13,8 @@
   <link rel="stylesheet" href="css/styles600.css" media="(min-width: 600px)">
   <link rel="stylesheet" href="css/styles800.css" media="(min-width: 800px)">
   <link rel="stylesheet" href="css/styles1000.css" media="(min-width: 1000px)">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg"
+    crossorigin="anonymous">
 </noscript>
 
 <body class="inside">
@@ -70,12 +72,12 @@
           <span id="star-5" class="fa fa-star"></span>
         </div>
         <div id="formName">
-          <label for="name">Name</label>
-          <input id="name" type="text" />
+          <label for="form-name">Name</label>
+          <input id="form-name" type="text" />
         </div>
         <div id="formComment">
-          <label for="comment">Comment</label>
-          <input id="comment" type="text" />
+          <label for="form-comment">Comment</label>
+          <input id="form-comment" type="text" />
         </div>
         <button type="button" class="formSubmit" onclick="return submitting()">Submit</button>
       </form>
@@ -107,10 +109,11 @@
     if (navigator.serviceWorker) {
       navigator.serviceWorker.register('sw.js')
         .then(registration => console.log('Service worker registered', registration))
-        .catch(err => console.log(err))
+        .catch(err => console.log(err));
     }
-    DBHelper.DBHelper()
+    DBHelper.DBHelper();
   </script>
+
   <script>
     var loadDeferredStyles = function () {
       var addStylesNode = document.getElementById("deferred-styles");
@@ -123,6 +126,31 @@
       window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
     if (raf) raf(function () { window.setTimeout(loadDeferredStyles, 0); });
     else window.addEventListener('load', loadDeferredStyles);
+  </script>
+
+  <script>
+    document.addEventListener("filled", function () {
+      var lazyImages = [].slice.call(document.querySelectorAll("img.lazy"));
+      if ("IntersectionObserver" in window) {
+        let lazyImageObserver = new IntersectionObserver(function (entries, observer) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+              let lazyImage = entry.target;
+              lazyImage.src = lazyImage.dataset.src;
+              lazyImage.srcset = lazyImage.dataset.srcset;
+              lazyImage.removeAttribute("data-src");
+              lazyImage.removeAttribute("data-srcset");
+              lazyImage.classList.remove("lazy");
+              lazyImageObserver.unobserve(lazyImage);
+            }
+          });
+        });
+
+        lazyImages.forEach(function (lazyImage) {
+          lazyImageObserver.observe(lazyImage);
+        });
+      }
+    });
   </script>
 
   <!-- End scripts -->
