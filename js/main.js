@@ -183,7 +183,7 @@ createRestaurantHTML = restaurant => {
   li.append(name);
 
   const heart_icon = document.createElement("div");
-  let argument = `heartRestaurant(${restaurant.id}, ${restaurant.is_favorite})`;
+  let argument = `heartRestaurant(${restaurant.id})`;
   heart_icon.setAttribute("onClick", argument);
   heart_icon.setAttribute("role", "button");
   heart_icon.setAttribute("aria-label", `heart_restaurant_${restaurant.id}`);
@@ -191,7 +191,9 @@ createRestaurantHTML = restaurant => {
   const heart = document.createElement("i");
   heart.setAttribute(
     "class",
-    restaurant.is_favorite === "true" ? "fas fa-heart" : "far fa-heart"
+    restaurant.is_favorite === true || restaurant.is_favorite === "true"
+      ? "fas fa-heart"
+      : "far fa-heart"
   );
   heart_icon.appendChild(heart);
   li.append(heart_icon);
@@ -214,16 +216,32 @@ createRestaurantHTML = restaurant => {
   return li;
 };
 
-heartRestaurant = (restaurant, is_favorite) => {
+heartRestaurant = restaurant => {
+  const is_favorite =
+    self.restaurants[self.restaurants.findIndex(e => e.id === restaurant)]
+      .is_favorite;
   return fetch(
     `http://localhost:1337/restaurants/${restaurant}/?is_favorite=${
-      is_favorite || is_favorite === "true" ? false : true
+      is_favorite === true || is_favorite === "true" ? false : true
     }`,
     { method: "PUT" }
   )
     .then(resp => resp.json())
-    .then(data => {
-      updateRestaurants();
+    .then(_ => {
+      let heart = document.getElementById(`heart${restaurant}`);
+      if (is_favorite === true || is_favorite === "true") {
+        heart.childNodes[0].classList.remove("fas");
+        heart.childNodes[0].classList.add("far");
+        self.restaurants[
+          self.restaurants.findIndex(e => e.id === restaurant)
+        ].is_favorite = false;
+      } else {
+        heart.childNodes[0].classList.remove("far");
+        heart.childNodes[0].classList.add("fas");
+        self.restaurants[
+          self.restaurants.findIndex(e => e.id === restaurant)
+        ].is_favorite = true;
+      }
     })
     .catch(err => console.log(err));
 };
