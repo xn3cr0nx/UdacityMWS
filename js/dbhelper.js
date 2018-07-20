@@ -93,21 +93,9 @@ class DBHelper {
    * Fetch all restaurants.
    */
   static fetchRestaurants(callback) {
-    // DBHelper.getIndexedRestaurants(callback).then(_ => {
-    //   fetch(DBHelper.DATABASE_URL)
-    //     .then(resp => resp.json())
-    //     .then(data => {
-    //       DBHelper.putRestaurantsIndexedDB(data);
-    //       return data;
-    //     })
-    //     .catch(err => {
-    //       const error = `Request failed. Returned error ${err}`;
-    //       return error;
-    //       // callback(error, null);
-    //     });
-    // });
     DBHelper.getIndexedRestaurants()
       .then(restaurants => {
+        if (restaurants[0]) callback(null, restaurants);
         fetch(DBHelper.DATABASE_URL)
           .then(resp => resp.json())
           .then(data => {
@@ -116,13 +104,30 @@ class DBHelper {
           })
           .catch(err => {
             const error = `Request failed. Returned error ${err}`;
-            callback(error, restaurants);
           });
       })
       .catch(err => {
         const error = `Request failed. Returned error ${err}`;
         callback(error, null);
       });
+  }
+
+  /**
+   * Gets restaurants in the indexed db
+   */
+  static getIndexedRestaurant(id) {
+    return this.dbPromise.then(db => {
+      if (!db) return;
+      self.db = db;
+      var index = db
+        .transaction("restaurants")
+        .objectStore("restaurants")
+        .index("by-id");
+
+      return index.get(parseInt(id)).then(restaurant => {
+        return restaurant;
+      });
+    });
   }
 
   /**
@@ -137,7 +142,6 @@ class DBHelper {
         .index("by-id");
 
       return index.getAll().then(restaurants => {
-        // callback(null, restaurants);
         return restaurants;
       });
     });
@@ -163,21 +167,23 @@ class DBHelper {
    * Fetch a restaurant by its ID.
    */
   static fetchRestaurantById(id, callback) {
-    // fetch all restaurants with proper error handling.
-    DBHelper.fetchRestaurants((error, restaurants) => {
-      if (error) {
+    DBHelper.getIndexedRestaurant(id)
+      .then(restaurant => {
+        if (restaurant) callback(null, restaurant);
+        fetch(`${DBHelper.DATABASE_URL}/${id}`)
+          .then(resp => resp.json())
+          .then(data => {
+            DBHelper.putRestaurantsIndexedDB([data]);
+            if (!restaurant) callback(null, data);
+          })
+          .catch(err => {
+            const error = `Request failed. Returned error ${err}`;
+          });
+      })
+      .catch(err => {
+        const error = `Request failed. Returned error ${err}`;
         callback(error, null);
-      } else {
-        const restaurant = restaurants.find(r => r.id == id);
-        if (restaurant) {
-          // Got the restaurant
-          callback(null, restaurant);
-        } else {
-          // Restaurant does not exist in the database
-          callback("Restaurant does not exist", null);
-        }
-      }
-    });
+      });
   }
 
   /**
@@ -292,9 +298,10 @@ class DBHelper {
    * Restaurant image URL.
    */
   static imageUrlForRestaurant(restaurant) {
-    return `/img/resp/${
-      restaurant.photograph ? restaurant.photograph : 10
-    }-original.jpg`;
+    // return `/img/resp/${
+    //   restaurant.photograph ? restaurant.photograph : 10
+    // }-original.jpg`;
+    return `/img/${restaurant.photograph ? restaurant.photograph : 10}.webp`;
   }
 
   /**
