@@ -1,45 +1,50 @@
-self.addEventListener('install', function (event) {
-	console.log("Service worker installed")
-  let cacheName = 'cache-v-0';
+self.addEventListener("install", function(event) {
+  console.log("Service worker installed");
+  let cacheName = "cache-v-0";
   let filesToCache = [
-  	'/',
-    'index.html',
-    'restaurant.html',
-    'css/styles.css',
-    'js/main.js',
-    'js/restaurant_info.js',
-    'js/dbhelper.js',
-    'js/idb.js',
-    'img/placeholder.png',
-    'img/placeholder.webp',
-    'img/resp/1-original.jpg', 'img/resp/1-small.jpg', 'img/resp/1-medium.jpg', 'img/resp/1-large.jpg', 
-    'img/resp/2-original.jpg', 'img/resp/2-small.jpg', 'img/resp/2-medium.jpg', 'img/resp/2-large.jpg', 
-    'img/resp/3-original.jpg', 'img/resp/3-small.jpg', 'img/resp/3-medium.jpg', 'img/resp/3-large.jpg', 
-    'img/resp/4-original.jpg', 'img/resp/4-small.jpg', 'img/resp/4-medium.jpg', 'img/resp/4-large.jpg', 
-    'img/resp/5-original.jpg', 'img/resp/5-small.jpg', 'img/resp/5-medium.jpg', 'img/resp/5-large.jpg', 
-    'img/resp/6-original.jpg', 'img/resp/6-small.jpg', 'img/resp/6-medium.jpg', 'img/resp/6-large.jpg', 
-    'img/resp/7-original.jpg', 'img/resp/7-small.jpg', 'img/resp/7-medium.jpg', 'img/resp/7-large.jpg', 
-    'img/resp/8-original.jpg', 'img/resp/8-small.jpg', 'img/resp/8-medium.jpg', 'img/resp/8-large.jpg', 
-    'img/resp/9-original.jpg', 'img/resp/9-small.jpg', 'img/resp/9-medium.jpg', 'img/resp/9-large.jpg', 
-    'img/resp/10-original.jpg', 'img/resp/10-small.jpg', 'img/resp/10-medium.jpg', 'img/resp/10-large.jpg'
-  ]
+    "/",
+    "index.html",
+    "restaurant.html",
+    "css/styles.css",
+    "css/styles600.css",
+    "css/styles800.css",
+    "css/styles1000.css",
+    "js/main.js",
+    "js/restaurant_info.js",
+    "js/dbhelper.js",
+    "js/idb.js",
+    "js/swRegister.js",
+    "img/placeholder.webp",
+    "img/1.webp",
+    "img/2.webp",
+    "img/3.webp",
+    "img/4.webp",
+    "img/5.webp",
+    "img/6.webp",
+    "img/7.webp",
+    "img/8.webp",
+    "img/9.webp",
+    "img/10.webp"
+  ];
 
   event.waitUntil(
-  	caches.open(cacheName)
-  	.then(cache => {
-  		return cache.addAll(filesToCache);
-  	})
-    .catch(err => console.log("error", err))
-  )
+    caches
+      .open(cacheName)
+      .then(cache => {
+        return cache.addAll(filesToCache);
+      })
+      .catch(err => console.log("error", err))
+  );
 });
 
-self.addEventListener('fetch', function (event) {
-  url = new URL(event.request.url)
+self.addEventListener("fetch", function(event) {
+  url = new URL(event.request.url);
   event.respondWith(
-    caches.match(url.pathname)
-    .then(function (response) {
-      return response || fetch(event.request);
-    })
-    .catch(err => console.log("Fetch error", err))
+    caches
+      .match(url.pathname)
+      .then(function(response) {
+        return response || fetch(event.request);
+      })
+      .catch(err => console.log("Fetch error", err))
   );
 });
