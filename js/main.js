@@ -162,19 +162,19 @@ createRestaurantHTML = restaurant => {
   image.classList.add("lazy");
   // image.src = DBHelper.imageUrlForRestaurant(restaurant);
   image.alt = `restaurant ${restaurant.name} image`;
-  const original_image = DBHelper.imageUrlForRestaurant(restaurant);
   image.src = "/img/placeholder.webp";
+  const original_image = DBHelper.imageUrlForRestaurant(restaurant);
   image.setAttribute("data-src", original_image);
-  image.setAttribute(
-    "data-srcset",
-    `${original_image.replace(
-      "-original",
-      "-small"
-    )} 200w, ${original_image.replace(
-      "-original",
-      "-medium"
-    )} 400w, ${original_image.replace("-original", "-large")} 600w`
-  );
+  // image.setAttribute(
+  //   "data-srcset",
+  //   `${original_image.replace(
+  //     "-original",
+  //     "-small"
+  //   )} 200w, ${original_image.replace(
+  //     "-original",
+  //     "-medium"
+  //   )} 400w, ${original_image.replace("-original", "-large")} 600w`
+  // );
   // image.sizes = '(min-width: 800px) 50vw, 85vw';
   li.append(image);
 

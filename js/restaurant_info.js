@@ -64,20 +64,20 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
   image.classList.add("restaurant-img");
   image.classList.add("lazy");
   image.alt = `restaurant ${restaurant.name} image`;
-  const original_image = DBHelper.imageUrlForRestaurant(restaurant);
   image.src = "/img/placeholder.webp";
+  const original_image = DBHelper.imageUrlForRestaurant(restaurant);
   image.setAttribute("data-src", original_image);
-  image.setAttribute(
-    "data-srcset",
-    `${original_image.replace(
-      "-original",
-      "-small"
-    )} 400w, ${original_image.replace(
-      "-original",
-      "-medium"
-    )} 800w, ${original_image.replace("-original", "-large")} 1000w`
-  );
-  image.sizes = "(min-width: 800px) 40vw, 95vw";
+  // image.setAttribute(
+  //   "data-srcset",
+  //   `${original_image.replace(
+  //     "-original",
+  //     "-small"
+  //   )} 400w, ${original_image.replace(
+  //     "-original",
+  //     "-medium"
+  //   )} 800w, ${original_image.replace("-original", "-large")} 1000w`
+  // );
+  // image.sizes = "(min-width: 800px) 40vw, 95vw";
 
   const cuisine = document.getElementById("restaurant-cuisine");
   cuisine.innerHTML = restaurant.cuisine_type;
