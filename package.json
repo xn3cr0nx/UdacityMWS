@@ -15,6 +15,8 @@
         "gulp-rename": "^1.2.2",
         "gulp-responsive": "^2.2.0",
         "gulp-util": "^3.0.8",
+        "imagemin": "^5.3.1",
+        "imagemin-webp": "^4.1.0",
         "merge2": "^1.2.1"
     }
 }

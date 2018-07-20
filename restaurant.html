@@ -82,35 +82,21 @@
         <button type="button" class="formSubmit" onclick="return submitting()">Submit</button>
       </form>
     </section>
-
-    <!-- End reviews -->
   </main>
-  <!-- End main -->
 
-  <!-- Beginning footer -->
   <footer id="footer">
     Copyright (c) 2017
     <a href="/">
       <strong>Restaurant Reviews</strong>
     </a> All Rights Reserved.
   </footer>
-  <!-- End footer -->
 
-  <!-- Beginning scripts -->
-  <!-- idb Library -->
   <script type="application/javascript" charset="utf-8" src="js/idb.js"></script>
-  <!-- Database helpers -->
   <script type="text/javascript" src="js/dbhelper.js"></script>
-  <!-- Main javascript file -->
+  <script type="application/javascript" charset="utf-8" src="js/swRegister.js"></script>
   <script async defer type="text/javascript" src="js/restaurant_info.js"></script>
-  <!-- Google Maps -->
   <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC4CG8yuq4OEL0Vvd1vlSVxVtaI7HPMMq4&libraries=places&callback=initMap"></script>
   <script>
-    if (navigator.serviceWorker) {
-      navigator.serviceWorker.register('sw.js')
-        .then(registration => console.log('Service worker registered', registration))
-        .catch(err => console.log(err));
-    }
     DBHelper.DBHelper();
   </script>
 
@@ -137,9 +123,9 @@
             if (entry.isIntersecting) {
               let lazyImage = entry.target;
               lazyImage.src = lazyImage.dataset.src;
-              lazyImage.srcset = lazyImage.dataset.srcset;
+              // lazyImage.srcset = lazyImage.dataset.srcset;
               lazyImage.removeAttribute("data-src");
-              lazyImage.removeAttribute("data-srcset");
+              // lazyImage.removeAttribute("data-srcset");
               lazyImage.classList.remove("lazy");
               lazyImageObserver.unobserve(lazyImage);
             }

@@ -46,16 +46,11 @@
 
   <script type="application/javascript" charset="utf-8" src="js/idb.js"></script>
   <script type="application/javascript" charset="utf-8" src="js/dbhelper.js"></script>
+  <script type="application/javascript" charset="utf-8" src="js/swRegister.js"></script>
   <script async defer type="application/javascript" charset="utf-8" src="js/main.js"></script>
   <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC4CG8yuq4OEL0Vvd1vlSVxVtaI7HPMMq4&libraries=places&callback=initMap"></script>
 
   <script>
-    if (navigator.serviceWorker) {
-      navigator.serviceWorker.register('sw.js')
-        .then(registration => console.log('Service worker registered', registration))
-        .catch(err => console.log(err))
-    }
-
     DBHelper.DBHelper()
   </script>
 
@@ -82,9 +77,9 @@
             if (entry.isIntersecting) {
               let lazyImage = entry.target;
               lazyImage.src = lazyImage.dataset.src;
-              lazyImage.srcset = lazyImage.dataset.srcset;
+              // lazyImage.srcset = lazyImage.dataset.srcset;
               lazyImage.removeAttribute("data-src");
-              lazyImage.removeAttribute("data-srcset");
+              // lazyImage.removeAttribute("data-srcset");
               lazyImage.classList.remove("lazy");
               lazyImageObserver.unobserve(lazyImage);
             }
