@@ -228,22 +228,29 @@ heartRestaurant = restaurant => {
   )
     .then(resp => resp.json())
     .then(_ => {
-      let heart = document.getElementById(`heart${restaurant}`);
-      if (is_favorite === true || is_favorite === "true") {
-        heart.childNodes[0].classList.remove("fas");
-        heart.childNodes[0].classList.add("far");
-        self.restaurants[
-          self.restaurants.findIndex(e => e.id === restaurant)
-        ].is_favorite = false;
-      } else {
-        heart.childNodes[0].classList.remove("far");
-        heart.childNodes[0].classList.add("fas");
-        self.restaurants[
-          self.restaurants.findIndex(e => e.id === restaurant)
-        ].is_favorite = true;
-      }
+      handleHeart(is_favorite, restaurant);
     })
-    .catch(err => console.log(err));
+    .catch(err => {
+      console.log(err);
+      handleHeart(is_favorite, restaurant);
+    });
+};
+
+handleHeart = (is_favorite, restaurant) => {
+  let heart = document.getElementById(`heart${restaurant}`);
+  if (is_favorite === true || is_favorite === "true") {
+    heart.childNodes[0].classList.remove("fas");
+    heart.childNodes[0].classList.add("far");
+    self.restaurants[
+      self.restaurants.findIndex(e => e.id === restaurant)
+    ].is_favorite = false;
+  } else {
+    heart.childNodes[0].classList.remove("far");
+    heart.childNodes[0].classList.add("fas");
+    self.restaurants[
+      self.restaurants.findIndex(e => e.id === restaurant)
+    ].is_favorite = true;
+  }
 };
 
 /**

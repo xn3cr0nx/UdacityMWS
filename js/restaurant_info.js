@@ -315,6 +315,13 @@ postReview = (id, name, rating, comments) => {
       //I need to cache body in indexed db and retry when user reconnect
       DBHelper.appendReview(body);
       handleReview();
+      body.id =
+        Math.max(
+          ...Array.from(document.querySelectorAll('[id^="review"]'))
+            .filter(e => /review\d+/.test(e.id))
+            .map(e => parseInt(e.id.replace("review", "")))
+        ) + 1;
+      fillReviewsHTML([body]);
     });
 };
 
